@@ -14,7 +14,7 @@ import json
 import os
 from shutil import copyfile
 
-import helpers.file_ops as fo
+import tracker_ml.file_ops as fo
 
 
 class __Trial:
