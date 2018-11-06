@@ -11,10 +11,11 @@ Copyright 2018, tracker.ml
 import datetime
 import hashlib
 import os
+from shutil import copyfile
 
 import click
 
-import tracker_ml.tools.file_ops as fo
+import tracker_ml.file_ops as fo
 
 
 def init_dir(api_key: str, rolling: bool, max_roll: int, ctx=None):
@@ -27,7 +28,7 @@ def init_dir(api_key: str, rolling: bool, max_roll: int, ctx=None):
     os.makedirs(".tracker/trials/")
 
     current_time = str(datetime.datetime.now())
-    fo.set_meta({"created": current_time, "updated": current_time, "files": {}}, ctx)
+    fo.set_meta({"created": current_time, "updated": current_time, "files": {}, "current_trial": 0}, ctx)
     fo.set_config({"api_key": api_key, "rolling": rolling, "max_roll": max_roll}, ctx)
 
 
@@ -36,7 +37,7 @@ def __hash(data: str) -> str:
 
 
 def add_file(path: str, ctx=None):
-    meta = fo.get_meta(ctx)
+    meta = fo.get_meta(ctx=ctx)
 
     if not os.path.exists(path):
         click.secho("Error: {} could not be located".format(path), fg="red")
@@ -76,6 +77,7 @@ def remove_file(path: str, ctx=None):
 
 
 def echo_status(sort_key: str, reverse: bool, limit: int, ctx=None):
+    current_trial = fo.get_meta(ctx=ctx)["current_trial"]
     metas = [fo.get_meta(tid) for tid in fo.get_trial_ids()]
 
     click.echo(" Total trials: {}".format(len(metas)))
@@ -115,4 +117,29 @@ def echo_status(sort_key: str, reverse: bool, limit: int, ctx=None):
     click.echo("-" * total_width)
 
     for meta in metas:
-        click.echo("|".join(data_str).format(*list(meta.values())))
+        color = "blue" if meta["id"] == current_trial else None
+        click.secho("|".join(data_str).format(*list(meta.values())), fg=color)
+
+
+def deploy_trial(trial_id: int, ctx=None):
+    trial_path = os.path.join(fo.get_trials_dir(ctx), str(trial_id))
+
+    if not os.path.exists(trial_path):
+        raise FileNotFoundError("Trial with ID {} couldn't be located".format(trial_id))
+
+    meta = fo.get_meta(ctx=ctx)
+    files = dict([(v, k) for k, v in meta["files"].items()])
+
+    for src_path in os.listdir(trial_path):
+        if src_path not in files:
+            continue
+
+        dst_path = files[src_path]
+        if not os.path.exists(dst_path):
+            continue
+
+        os.remove(dst_path)
+        copyfile(os.path.join(trial_path, src_path), dst_path)
+
+    meta["current_trial"] = trial_id
+    fo.set_meta(meta, ctx)

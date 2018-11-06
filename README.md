@@ -4,7 +4,25 @@ www.tracker.ml SDK and CLI
 
 ## Install
 
-// TODO
+
+
+
+## Build
+
+Install build tools
+```
+python -m pip install --user --upgrade setuptools wheel
+```
+
+Create distribution archives
+```
+python setup.py sdist bdist_wheel
+```
+
+Install from archives
+```
+python -m pip install dist/tracker_ml-X.X.X.tar.gz
+```
 
 ## Python SDK
 
@@ -14,7 +32,7 @@ First, initialize tracker using the CLI and update the files you want to track. 
 `trackerml` anywhere and everywhere. Use is easy:
 
 ```python
-import tracker_ml as tml
+import tracker_ml.tml as tml
 
 # <machine learning code>
 

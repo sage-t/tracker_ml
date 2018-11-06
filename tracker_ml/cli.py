@@ -28,7 +28,6 @@ import click
 @click.option('--debug/--no-debug', default=False)
 @click.pass_context
 def cli(ctx, debug):
-    print("TESTING")
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called
     # by means other than the `if` block below
     ctx.ensure_object(dict)
@@ -59,14 +58,16 @@ def status(ctx, sort_key, reverse, limit):
 
 @cli.command()
 @click.pass_context
-def deploy(ctx):
-    """ Undoes any file changes to revert project to the given a trial's ID """
+@click.argument("Trial_ID", type=click.INT)
+def deploy(ctx, trial_id):
+    """ Undo any file changes to revert tracked files to the given a trial's ID """
+    tools.deploy_trial(trial_id, ctx)
 
 
-@cli.command()
-@click.pass_context
-def config(ctx):
-    """ Set any configuration options """
+# @cli.command()
+# @click.pass_context
+# def config(ctx):
+#     """ Set any configuration options """
 
 
 @cli.command()
@@ -85,16 +86,16 @@ def remove(ctx, path):
     tools.remove_file(os.path.abspath(path), ctx)
 
 
-@cli.command()
-@click.pass_context
-def stash(ctx):
-    """ Stash given trials so they don't show up by default in the status command """
+# @cli.command()
+# @click.pass_context
+# def stash(ctx):
+#     """ Stash given trials so they don't show up by default in the status command """
 
 
-@cli.command()
-@click.pass_context
-def tag(ctx):
-    """ Tag given trial so it can later be searched or sorted by the status command """
+# @cli.command()
+# @click.pass_context
+# def tag(ctx):
+#     """ Tag given trial so it can later be searched or sorted by the status command """
 
 
 if __name__ == '__main__':
