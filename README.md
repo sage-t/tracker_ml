@@ -34,6 +34,9 @@ First, initialize tracker using the CLI and update the files you want to track. 
 ```python
 import tracker_ml.tml as tml
 
+tml.login("username", "password")
+tml.model("Logistic Regression")
+
 # <machine learning code>
 
 # record int, float, or str
@@ -44,6 +47,8 @@ tml.record("model", "Logistic Regression")
 tml.mrecord("epoch", 1)
 tml.mrecord("epoch", 2)
 tml.mrecord("epoch", 3)
+
+# data will be saved locally and to the API on exit
 ```
 
 All changes since the previous run and all recorded values will be automatically saved. The CLI
@@ -69,7 +74,7 @@ $ python tracker.py status --help
 Initialize in the project root. 
 
 ```
-$ python tracker.py init
+$ python tracker.py init -u <username> -p <password> -n <project name>
 ```
 
 Add file(s)/directory(s) that will be saved every run. 
