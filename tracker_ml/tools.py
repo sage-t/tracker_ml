@@ -16,9 +16,11 @@ from shutil import copyfile
 import click
 
 import tracker_ml.file_ops as fo
+from tracker_ml.api import TrackerMLAPI
 
 
-def init_dir(api_key: str, rolling: bool, max_roll: int, ctx=None):
+def init_dir(username: str, password: str, project_name: str, project_id: int, api_key: str,
+             rolling: bool, max_roll: int, ctx=None):
     if os.path.exists(".tracker/"):
         click.secho("Error: tracker was already initialized", fg="red")
         return
@@ -28,8 +30,38 @@ def init_dir(api_key: str, rolling: bool, max_roll: int, ctx=None):
     os.makedirs(".tracker/trials/")
 
     current_time = str(datetime.datetime.now())
-    fo.set_meta({"created": current_time, "updated": current_time, "files": {}, "current_trial": 0}, ctx)
-    fo.set_config({"api_key": api_key, "rolling": rolling, "max_roll": max_roll}, ctx)
+    meta = {
+        "created": current_time,
+        "updated": current_time,
+        "files": {},
+        "current_trial": 0,
+        "models": {}
+    }
+    config = {
+        "project_name": project_name,
+        "project_id": project_id,
+        "api_key": api_key,
+        "rolling": rolling,
+        "max_roll": max_roll
+    }
+
+    try:
+        if username and password:
+            api = TrackerMLAPI(username, password)
+
+            if project_name and not project_id:
+                config["project_id"] = api.post_project(project_name)["id"]
+            elif project_id and not project_name:
+                for p in api.get_projects():
+                    if p["id"] == project_id:
+                        config["project_name"] = p["name"]
+                if not config["project_name"]:
+                    click.secho("Warning: no project with id {} found".format(project_id), fg="yellow")
+    except:
+        click.secho("Warning: problem connecting to tracker.ml API", fg="yellow")
+    finally:
+        fo.set_meta(meta, ctx)
+        fo.set_config(config, ctx)
 
 
 def __hash(data: str) -> str:

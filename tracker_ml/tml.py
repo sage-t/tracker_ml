@@ -11,15 +11,17 @@ Copyright 2018, tracker.ml
 import atexit
 import collections
 import json
+import logging
 import os
 from shutil import copyfile
 
 import tracker_ml.file_ops as fo
+from tracker_ml.api import TrackerMLAPI
 
 
-class __Trial:
+class __TMLRun:
     """
-    A Trial is a single execution of a ml model train
+    A Run is a single execution of a ml model train
     """
 
     def __init__(self):
@@ -28,8 +30,17 @@ class __Trial:
         self.__curr_dir = os.path.join(self.__trials_dir, str(self.__id))
         self.__meta = collections.OrderedDict()
         self.__meta["id"] = self.__id
+        self.__api = None
+        self.__model_name = ""
 
         atexit.register(self.__save)
+
+    def login(self, username: str, password: str):
+        self.__api = TrackerMLAPI(username, password)
+        self.__api.ensure_token()
+
+    def model(self, model_name: str):
+        self.__model_name = model_name
 
     def record(self, key: str, value):
         if key in self.__meta:
@@ -59,12 +70,46 @@ class __Trial:
         with open(os.path.join(self.__curr_dir, "meta.json"), "w+") as fp:
             json.dump(self.__meta, fp, indent=2)
 
+        config = fo.get_config()
         meta = fo.get_meta()
         meta["current_trial"] = self.__id
-        fo.set_meta(meta)
+
+        try:
+            if self.__model_name and self.__api:
+                meta["model_name"] = self.__model_name
+                project_id = config["project_id"]
+
+                if self.__model_name in meta["models"]:
+                    model_id = meta["models"][self.__model_name]
+                else:
+                    model_id = self.__api.post_model(self.__model_name, project_id)
+                    meta["models"][self.__model_name] = model_id
+
+                self.__api.post_run(project_id, model_id, meta)
+        except Exception as e:
+            logging.exception("Problem using tracker.ml API")
+        finally:
+            fo.set_meta(meta)
 
 
-__trial = __Trial()
+__run = __TMLRun()
+
+
+def login(username: str, password: str):
+    """
+    Set username and password to automatically upload run results to tracker.ml
+    :param username: tracker.ml username
+    :param password: tracker.ml password
+    """
+    __run.login(username, password)
+
+
+def model(model_name: str):
+    """
+    Set the model for this run to by tied to. Creates model if it does not exist
+    :param model_name: Name of model (ie "Logistic Regression")
+    """
+    __run.model(model_name)
 
 
 def record(key: str, value):
@@ -73,7 +118,7 @@ def record(key: str, value):
     :param key: String key that will be used to tag and compare with other models
     :param value: Value of type str, int, or float
     """
-    __trial.record(key, value)
+    __run.record(key, value)
 
 
 def mrecord(key: str, value):
@@ -82,4 +127,4 @@ def mrecord(key: str, value):
     :param key: String key that will be used to tag data
     :param value: Value of type str, int, or float
     """
-    __trial.mrecord(key, value)
+    __run.mrecord(key, value)

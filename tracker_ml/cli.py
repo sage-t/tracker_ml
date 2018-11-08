@@ -38,12 +38,16 @@ def cli(ctx, debug):
 
 @cli.command()
 @click.pass_context
+@click.option("-u", "--username", default="", help="Username for www.tracker.ml")
+@click.option("-p", "--password", default="", help="Password for www.tracker.ml")
+@click.option("-n", "--project_name", default="", help="Project name used for www.tracker.ml")
+@click.option("-i", "--project_id", default=0, help="Project id used for www.tracker.ml")
 @click.option("-k", "--api_key", default="", help="API key to bind to www.tracker.ml project")
 @click.option("-r", "--roll", is_flag=True, help="Enable rolling trials")
 @click.option("-m", "--max_roll", default=20, show_default=True, help="Max trials to save before rolling")
-def init(ctx, api_key, roll, max_roll):
+def init(ctx, username, password, project_name, project_id, api_key, roll, max_roll):
     """ Initializes tracker.ml project """
-    tools.init_dir(api_key, roll, max_roll, ctx)
+    tools.init_dir(username, password, project_name, project_id, api_key, roll, max_roll, ctx)
 
 
 @cli.command()
