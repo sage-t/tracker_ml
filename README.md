@@ -29,7 +29,7 @@ python -m pip install dist/tracker_ml-X.X.X.tar.gz
 ### Use
 
 First, initialize tracker using the CLI and update the files you want to track. Then import 
-`trackerml` anywhere and everywhere. Use is easy:
+`tracker_ml.tml` anywhere and everywhere. Use is easy:
 
 ```python
 import tracker_ml.tml as tml
