@@ -67,32 +67,32 @@ trained/tested.
 Use the help command. (Not all commands displayed work yet)
 
 ```
-$ python tracker.py --help
-$ python tracker.py status --help
+$ tracker --help
+$ tracker status --help
 ```
 
 Initialize in the project root. 
 
 ```
-$ python tracker.py init -u <username> -p <password> -n <project name>
+$ tracker init -u <username> -p <password> -n <project name>
 ```
 
 Add file(s)/directory(s) that will be saved every run. 
 
 ```
-$ python tracker.py add .
+$ tracker add .
 ```
 
 Stop recording file(s)/directory(s) that would be saved every run. 
 
 ```
-$ python tracker.py remove .
+$ tracker remove .
 ```
 
 View past trials and sort them
 
 ```
-$ python tracker.py status
+$ tracker status
  Total trials: 4
  Sorted by: id
 
