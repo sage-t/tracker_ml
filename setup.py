@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tracker_ml",
-    version="0.0.1",
+    version="0.0.3",
     author="Sage Thomas",
     author_email="sage.thomas@outlook.com",
     description="Machine learning file and parameter version control SDK for www.tracker.ml",
@@ -27,7 +27,7 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'tracker = tracker_ml.tools.cli:cli'
+            'tracker = tracker_ml.cli:cli'
         ]
     },
 )

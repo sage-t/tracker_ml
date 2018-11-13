@@ -26,9 +26,6 @@ def _get_dir(ctx=None) -> str:
         else:
             new_cd = os.path.abspath(os.path.join(cd, os.pardir))
             if cd == new_cd:
-                print("---")
-                print(ctx)
-                print("---")
                 if ctx and ctx.obj.get("CLI", default=False):
                     click.secho("Error: tracker has not been initialized", fg="red")
                     exit(1)
