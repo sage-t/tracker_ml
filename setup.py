@@ -5,16 +5,17 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tracker_ml",
-    version="0.0.4",
+    version="0.0.5",
     author="Sage Thomas",
     author_email="sage.thomas@outlook.com",
     description="Machine learning file and parameter version control SDK for www.tracker.ml",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/sage-t/tracker_ml",
-    download_url='https://github.com/sage-t/tracker_ml/archive/v0.0.4.tar.gz',
-    keywords=['MACHINE', 'LEARNING', 'VERSION', 'TRACKING', 'TRACKER'],
-    packages=setuptools.find_packages(),
+    download_url="https://github.com/sage-t/tracker_ml/archive/v0.0.5.tar.gz",
+    keywords=["MACHINE", "LEARNING", "VERSION", "TRACKING", "TRACKER"],
+    packages=["tracker_ml"],
+    install_requires=['click'],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3",
@@ -26,8 +27,8 @@ setuptools.setup(
         "Intended Audience :: Developers"
     ],
     entry_points={
-        'console_scripts': [
-            'tracker = tracker_ml.cli:cli'
+        "console_scripts": [
+            "tracker = tracker_ml.cli:cli"
         ]
     },
 )
