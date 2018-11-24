@@ -4,7 +4,7 @@ www.tracker.ml SDK and CLI
 
 ## Install
 
-`pip install tracker-ml`
+`pip install tracker-ml --no-cache-dir`
 
 ## Build
 

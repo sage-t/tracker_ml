@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tracker_ml",
-    version="0.0.5",
+    version="0.0.7",
     author="Sage Thomas",
     author_email="sage.thomas@outlook.com",
     description="Machine learning file and parameter version control SDK for www.tracker.ml",
