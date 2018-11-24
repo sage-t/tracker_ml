@@ -153,11 +153,11 @@ def echo_status(sort_key: str, reverse: bool, limit: int, ctx=None):
         click.secho("|".join(data_str).format(*list(meta.values())), fg=color)
 
 
-def deploy_trial(trial_id: int, ctx=None):
-    trial_path = os.path.join(fo.get_trials_dir(ctx), str(trial_id))
+def deploy_trial(run_id: int, ctx=None):
+    trial_path = os.path.join(fo.get_trials_dir(ctx), str(run_id))
 
     if not os.path.exists(trial_path):
-        raise FileNotFoundError("Trial with ID {} couldn't be located".format(trial_id))
+        raise FileNotFoundError("Run with ID {} couldn't be located".format(run_id))
 
     meta = fo.get_meta(ctx=ctx)
     files = dict([(v, k) for k, v in meta["files"].items()])
@@ -173,5 +173,5 @@ def deploy_trial(trial_id: int, ctx=None):
         os.remove(dst_path)
         copyfile(os.path.join(trial_path, src_path), dst_path)
 
-    meta["current_trial"] = trial_id
+    meta["current_trial"] = run_id
     fo.set_meta(meta, ctx)

@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/sage-t/tracker_ml",
-    download_url="https://github.com/sage-t/tracker_ml/archive/v0.0.5.tar.gz",
+    download_url="https://github.com/sage-t/tracker_ml/archive/v0.0.7.tar.gz",
     keywords=["MACHINE", "LEARNING", "VERSION", "TRACKING", "TRACKER"],
     packages=["tracker_ml"],
     install_requires=['click'],

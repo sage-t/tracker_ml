@@ -13,10 +13,11 @@ track.ml command line interface
 import os
 
 import tracker_ml.tools as tools
+import tracker_ml.file_ops as fo
 
 __author__ = "Sage Thomas"
 __copyright__ = "Copyright 2018, tracker.ml"
-__version__ = "0.0.1"
+__version__ = "0.0.7"
 __maintainer__ = "Sage Thomas"
 __email__ = "sage.thomas@outlook.com"
 __status__ = "Development"
@@ -78,7 +79,7 @@ def deploy(ctx, trial_id):
 @click.pass_context
 @click.argument('path', type=click.Path(exists=True))
 def add(ctx, path):
-    """ Add a file or directory that will be tracked """
+    """ Add a file or directory to version track """
     tools.add_file(os.path.abspath(path), ctx)
 
 
@@ -86,8 +87,24 @@ def add(ctx, path):
 @click.pass_context
 @click.argument('path', type=click.Path(exists=True))
 def remove(ctx, path):
-    """ Remove a file or directory that was being tracked """
+    """ Stop version tracking a file or directory """
     tools.remove_file(os.path.abspath(path), ctx)
+
+
+@cli.command()
+@click.pass_context
+@click.argument('decrement', type=click.INT, default=1)
+def down(ctx, decrement):
+    """ Revert files to decremented run id """
+    tools.deploy_trial(fo.get_meta(ctx=ctx)["current_trial"] - decrement, ctx)
+
+
+@cli.command()
+@click.pass_context
+@click.argument('increment', type=click.INT, default=1)
+def up(ctx, increment):
+    """ Revert files to incremented run id """
+    tools.deploy_trial(fo.get_meta(ctx=ctx)["current_trial"] + increment, ctx)
 
 
 # @cli.command()
