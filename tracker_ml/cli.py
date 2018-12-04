@@ -94,7 +94,7 @@ def remove(ctx, path):
 @cli.command()
 @click.pass_context
 @click.argument('decrement', type=click.INT, default=1)
-def down(ctx, decrement):
+def undo(ctx, decrement):
     """ Revert files to decremented run id """
     tools.deploy_trial(fo.get_meta(ctx=ctx)["current_trial"] - decrement, ctx)
 
@@ -102,15 +102,16 @@ def down(ctx, decrement):
 @cli.command()
 @click.pass_context
 @click.argument('increment', type=click.INT, default=1)
-def up(ctx, increment):
+def redo(ctx, increment):
     """ Revert files to incremented run id """
     tools.deploy_trial(fo.get_meta(ctx=ctx)["current_trial"] + increment, ctx)
 
 
-# @cli.command()
-# @click.pass_context
-# def stash(ctx):
-#     """ Stash given trials so they don't show up by default in the status command """
+@cli.command()
+@click.pass_context
+def push(ctx):
+    """ Push results to tracker.ml """
+    # TODO
 
 
 # @cli.command()

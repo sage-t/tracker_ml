@@ -112,6 +112,14 @@ def model(model_name: str):
     __run.model(model_name)
 
 
+def accuracy(value):
+    """
+    Record the accuracy (same as tml.record("accuracy", value))
+    :param value: Value of type str, int, or float
+    """
+    __run.record("accuracy", value)
+
+
 def record(key: str, value):
     """
     Use to record a value relevant to the model
